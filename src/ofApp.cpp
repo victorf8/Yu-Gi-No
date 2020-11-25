@@ -12,14 +12,43 @@ void ofApp::setup(){
 		cerr << "SOMETHING IS WRONG ABANDON SHIP!!!";
 	}//if
 
-	int x, z;
-	string y;
+	int lvl, atk, def;
+	string name, type, des;
 
-	while (file >> x >> y >> z) {
-		cout << x << y << z;
+	cout << "Processing text file to construct cards." << endl << endl;
+
+	while (file >> type >> lvl >> name >> atk >> def >> des) {
+		
+		cout << "Processing line:" << endl;
+		cout << type << " " << lvl << " " << name << " " << atk << " " << def << " " << des << endl;
+
+		if (type == "m") {
+			MonsterCard* current = new MonsterCard();
+			current->type = "Monster";
+			current->name = name;
+			current->descrip = des;
+			current->LVL = lvl;
+			current->ATK = atk;
+			current->DEF = def;
+
+			deck.push_back(current);
+
+			cout << "Monster Card : " << current->name << " is lvl " << current->LVL << " with an attack of " << current->ATK << " and defence of " << current->DEF << endl << endl;
+		}
+		else if (type == "s") {
+			SpellCard* current = new SpellCard();
+			current->type = "Spell";
+			current->name = name;
+
+			deck.push_back(current);
+
+			cout << "Spell " << name << " processed." << endl << endl;
+		}
 
 	}
-
+	hand.drawCard(deck[0]);
+	hand.drawCard(deck[18]);
+	hand.play(field, 0);
 }
 
 //--------------------------------------------------------------

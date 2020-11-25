@@ -8,10 +8,13 @@ public:
 
 	string name;
 	string type;
+	string descrip;
 
 	void destroy() {
 		//remove card completely
 	}
+
+	virtual MonsterCard* play() = 0;
 
 };
 
@@ -30,18 +33,15 @@ public:
 		type = "Monster";
 	}
 
-	void play() {
-		if (LVL > 6) {
-			//request 2 tributes
-		}
-		else if (LVL > 4) {
-			//request 1 tribute
-		}
-		else {
-			//add card to board array
-		}
+	MonsterCard* play() {
+
+
+		MonsterCard* current = new MonsterCard();
+		current = this;
+		return current;
 	}
 
+	
 	void attack(MonsterCard target) {
 		if (target.pos == 0) {
 			target.flip();
@@ -71,65 +71,57 @@ public:
 	SpellCard::SpellCard() {
 		type = "Spell";
 	}
+
+	MonsterCard* play() {
+
+	}
 };
 ///////////////////////////////////////////end of card classes
 
 
-////////////////////////////////////////Start hand class
-class Hand {
-public:
 
-	Card hand[6];
-
-	Hand() {
-		for (int i = 0; i < 6; i++) {
-			hand[i].name = "";
-		}
-	}
-
-	void draw() {
-		
-		ofNoFill();
-
-		int btm = ofGetHeight();
-		int x = 200;
-
-		for (int i = 0; i < 7; i++) {
-			if (hand[i].name == "") {
-				ofSetColor(255, 255, 255);
-				ofDrawRectangle(x, btm - 350, 200, 350);
-				x += 201;
-			}
-			else {
-				ofSetColor(0, 255, 0);
-				ofDrawRectangle(x, btm - 350, 200, 350);
-				x += 201;
-				//draw card components
-
-			}
-			
-		}
-
-	}
-
-};
-/////////////////////////////////////end of hand class
 
 
 /////////////////////////START OF FIELD CLASS
 class Field {
 public:
 
-	Card eBoard[5];
-	Card pBoard[5];
+	MonsterCard* eBoard[5];
+	MonsterCard* pBoard[5];
+	int pos;
 
-	void play(Card curr, int position) {
-		pBoard[position - 1] = curr;
+	Field() {
+		for (int i = 0; i < 5; i++) {
+			eBoard[i]->name = "";
+			pBoard[i]->name = "";
+		}
 	}
 
-	void remove(int pos) {
-
+	void remove(MonsterCard* card, int player) {
+		if (player == 1) {
+			for (int i = 0; i < 5; i ++) {
+				if (pBoard[i]->name == card->name) {
+					pBoard[i] = NULL;
+				}
+			}
+		}else if (player == 0) {
+			for (int i = 0; i < 5; i++) {
+				if (eBoard[i]->name == card->name) {
+					eBoard[i] = NULL;
+				}
+			}
+		}
 	}
+
+	void play(MonsterCard* card) {
+		for (int i = 0; i < 5; i++) {
+			if (pBoard[i]->name == "") {
+				pBoard[i] = card;
+				i = 5;
+			}
+		}
+	}
+	
 
 	void draw() {
 		ofSetColor(255, 0, 0);
@@ -146,10 +138,97 @@ public:
 			y += 450;
 			x = 5;
 		}
+
+		for (int i = 0; i < 5; i++) {
+			if (pBoard[i]->name != "") {
+				x = 5;
+
+				ofSetColor(0, 255, 0);
+				ofDrawBitmapString(pBoard[i]->name, x + 5, y + 5);
+				ofDrawBitmapString(pBoard[i]->type, x + 5, y + 10);
+			}
+		}
 	}
 };
 //////////////////////////////////////end of field class
 
+////////////////////////////////////////Start hand class
+class Hand {
+public:
+
+	Card* hand[4];
+
+	Hand() {
+		for (int i = 0; i < 4; i++) {
+			hand[i] = NULL;
+		}
+
+	}
+
+	void drawCard(Card* c) {
+
+		int i = 0;
+		while (i != 4) {
+			if (hand[i] == NULL) {
+				hand[i] = c;
+				return;
+			}
+			else { i++; }
+		}
+	}
+
+	void play(Field field, int x) {
+
+		field.play(hand[x]->play());
+
+		hand[x] == NULL;
+
+	}
+
+
+	void draw() {
+
+		ofNoFill();
+
+		int btm = ofGetHeight();
+		int x = 1050;
+
+		for (int i = 0; i < 4; i++) {
+			if (hand[i] == NULL) {
+				ofSetColor(255, 255, 255);
+				ofDrawRectangle(x, btm - 400, 200, 350);
+				x += 201;
+			}
+			else {
+				ofSetColor(0, 255, 0);
+				ofDrawRectangle(x, btm - 400, 200, 350);
+
+
+				ofBitmapFont();
+				ofDrawBitmapString(hand[i]->name, x + 5, btm - 385);
+				ofDrawBitmapString(hand[i]->type, x + 5, btm - 370);
+
+				if (hand[i]->type == "Monster") {
+					MonsterCard *mc = (MonsterCard *)hand[i];
+					ofDrawBitmapString(mc->LVL, x + 185, btm - 385);
+					ofDrawBitmapString(mc->ATK, x + 120, btm - 370);
+					ofDrawBitmapString("/", x + 155, btm - 370);
+					ofDrawBitmapString(mc->DEF, x + 165, btm - 370);
+				}
+				else if (hand[i]->type == "Spell") {
+					SpellCard *mc = (SpellCard *)hand[i];
+
+				}
+
+				x += 201;
+			}
+
+		}
+
+	}
+
+};
+/////////////////////////////////////end of hand class
 
 
 class ofApp : public ofBaseApp{
@@ -171,30 +250,9 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		string lowLVL[10] = { "1 KuriBro 400 500" ,
-		"4 Henry_MadCock 1900 0",
-		"3 Baby_Knight_of_Valkyrie 1500 1700",
-		"2 Peter_McSkeeter 900 700" ,
-		"3 Gatorade 1500 1500",
-		"4 Zangles 2000 0",
-		"1 Peggi-18 300 1100",
-		"4 Succulent_Face_Melter 2100 1500",
-		"2 Puffmíster 1100 1200",
-		"3 Goat_Goblin 1600 1600" };
 
-		string highLVL[5] = { "6 Winged_Knight_of_Valyrie 2400 3000",
-			"5 Zad 2200 2000",
-			"7 Organ_Blender 2600 400",
-			"8 Choco_StarFish_Devourer 1300 3500",
-			"6 Marc_Rubbindorf 2500 2500" };
 
-		string spells[5] = { "Flip 'n' Flop",
-			"Destuto",
-			"Talk To The Hand",
-			"GameStop Trade",
-			"Don't Mind If I Do" };
-
-		vector <Card> deck;
+		vector <Card*> deck;
 		//vector <Card> hand;
 		Field field;
 		Hand hand;

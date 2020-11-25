@@ -1,15 +1,20 @@
-1 KuriBro 400 500
-4 Henry_MadCock 1900 0
-3 Baby_Knight_of_Valkyrie 1500 1700
-2 Peter_McSkeeter 900 700
-3 Gatorade 1500 1500
-4 Zangles 2000 0
-1 Peggi-18 300 1100
-4 Succulent_Face_Melter 2100 1500
-2 Puffmíster 1100 1200
-3 Goat_Goblin 1600 1600
-6 Winged_Knight_of_Valyrie 2400 3000
-5 Zad 2200 2000
-7 Organ_Blender 2600 400
-8 Choco_StarFish_Devourer 1300 3500
-6 Marc_Rubbindorf 2500 2500
+m 1 KuriBro 400 500 x
+m 4 Henry_MadCock 1900 0 x
+m 3 Baby_Knight_of_Valkyrie 1500 1700 x
+m 2 Peter_McSkeeter 900 700 x
+m 3 Gatorade 1500 1500 x
+m 4 Zangles 2000 0 x
+m 1 Peggi-18 300 1100 x
+m 4 Succulent_Face_Melter 2100 1500 x
+m 2 Puffmíster 1100 1200 x
+m 3 Goat_Goblin 1600 1600 x
+m 6 Winged_Knight_of_Valyrie 2400 3000 x
+m 5 Zad 2200 2000 x
+m 7 Organ_Blender 2600 400 x
+m 8 Choco_StarFish_Devourer 1300 3500 x
+m 6 Marc_Rubbindorf 2500 2500 x
+s 0 Flip_'n'_Flop 0 0 Change_the_position_of_an_enemy_monster.
+s 0 Destuto 0 0 Destroy_an_enemy_monster.
+s 0 Talk_To_The_Hand 0 0 Send_an_enemy_monster_back_to_the_hand.
+s 0 GameStop_Trade 0 0 Destroy_a_friendly_monster_aswell_as_an_enemy_monster.
+s 0 Don't_Mind_If_I_Do 0 0 Take_control_of_an_enemy_monster.
