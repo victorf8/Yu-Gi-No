@@ -60,10 +60,13 @@ void ofApp::update(){
 void ofApp::draw(){
 	field.draw();
 	hand.draw();
+	buttons.draw();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+	cout << key << endl;
+	buttons.buttonPressed(1, field, hand);
 
 }
 

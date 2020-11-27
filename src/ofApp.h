@@ -14,7 +14,6 @@ public:
 		//remove card completely
 	}
 
-	virtual MonsterCard* play() = 0;
 
 };
 
@@ -33,13 +32,7 @@ public:
 		type = "Monster";
 	}
 
-	MonsterCard* play() {
-
-
-		MonsterCard* current = new MonsterCard();
-		current = this;
-		return current;
-	}
+	
 
 	
 	void attack(MonsterCard target) {
@@ -72,9 +65,7 @@ public:
 		type = "Spell";
 	}
 
-	MonsterCard* play() {
-
-	}
+	
 };
 ///////////////////////////////////////////end of card classes
 
@@ -92,8 +83,8 @@ public:
 
 	Field() {
 		for (int i = 0; i < 5; i++) {
-			eBoard[i]->name = "";
-			pBoard[i]->name = "";
+			eBoard[i] = NULL;
+			pBoard[i] = NULL;
 		}
 	}
 
@@ -115,8 +106,9 @@ public:
 
 	void play(MonsterCard* card) {
 		for (int i = 0; i < 5; i++) {
-			if (pBoard[i]->name == "") {
+			if (pBoard[i] == NULL) {
 				pBoard[i] = card;
+				cout << pBoard[i]->name << endl;/////////////////////////
 				i = 5;
 			}
 		}
@@ -139,9 +131,13 @@ public:
 			x = 5;
 		}
 
+
+		x = 5;
 		for (int i = 0; i < 5; i++) {
-			if (pBoard[i]->name != "") {
-				x = 5;
+			if (pBoard[i] != NULL) {
+
+				cout << "attempting to draw " << pBoard[i]->name << endl;////////////////////
+				
 
 				ofSetColor(0, 255, 0);
 				ofDrawBitmapString(pBoard[i]->name, x + 5, y + 5);
@@ -179,9 +175,12 @@ public:
 
 	void play(Field field, int x) {
 
-		field.play(hand[x]->play());
+		MonsterCard *mc = (MonsterCard *)hand[x];
 
-		hand[x] == NULL;
+		field.play(mc);
+
+		hand[x] = NULL;
+
 
 	}
 
@@ -230,6 +229,53 @@ public:
 };
 /////////////////////////////////////end of hand class
 
+//////////////////////////////////////Start Of Button Class
+class Buttons {
+public:
+	int gameState;
+	int lastButton;
+
+	Buttons() {
+		gameState = 0;
+	}
+
+	void draw() {
+		ofSetColor(0, 255, 0);
+		ofDrawRectangle(1200, 47, 100, 50);
+		ofDrawRectangle(1200, 153, 100, 50);
+		ofDrawRectangle(1097, 100, 100, 50);
+		ofDrawRectangle(1303, 100, 100, 50);
+
+		if (gameState == 0) {
+			ofDrawBitmapString("Which card would you like to play?", 1100, 40);
+			ofDrawBitmapString("1", 1203, 63);
+			ofDrawBitmapString("3", 1203, 169);
+			ofDrawBitmapString("4", 1100, 116);
+			ofDrawBitmapString("2", 1306, 116);
+		}
+
+		if (gameState == 1) {
+			ofDrawBitmapString("Which card would you like to attack? (if empty attack player directly)", 1100, 40);
+			ofDrawBitmapString("1", 1203, 63);
+			ofDrawBitmapString("3", 1203, 169);
+			ofDrawBitmapString("4", 1100, 116);
+			ofDrawBitmapString("2", 1306, 116);
+		}
+	}
+
+	void buttonPressed(int btn, Field field, Hand hand) {
+		if (btn < 5) {
+			if (gameState == 0) {
+				btn = 1;
+				cout << "attempting to play card from btn press" << endl;
+				hand.play(field, btn - 1);
+				gameState = 1;
+			}
+		}
+	}
+};
+//////////////////////////////////////End Of Button Class
+
 
 class ofApp : public ofBaseApp{
 
@@ -256,6 +302,7 @@ class ofApp : public ofBaseApp{
 		//vector <Card> hand;
 		Field field;
 		Hand hand;
+		Buttons buttons;
 
 		
 };
